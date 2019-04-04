@@ -1,23 +1,17 @@
 import logging
+from functools import wraps
 
 
 logging.basicConfig(level=logging.INFO, format='(%(asctime)s).%(name)s: %(message)s', datefmt='%H:%M:%S')
 log = logging.getLogger("LinkedList")
 
 
-def push(func):
+def add(func):
+    @wraps(func)
     def wrap(cls, val):
-        log.info(f"Adding element {val} to linked list head")
+        log.info(f"{func.__name__}ing value {val} to {cls.__class__.__name__}")
         func(cls, val)
     return wrap
-
-
-def unshift(func):
-    def wrap(cls, val):
-        log.info(f"Deleting element {val} from linked list")
-        func(cls, val)
-    return wrap
-
 
 class Node(object):
     def __init__(self, value, next=None):
@@ -48,7 +42,6 @@ class LinkedList(object):
         else:
             raise StopIteration
 
-    @unshift
     def unshift(self, value):
         if not self.head:
             self.head = Node(value)
@@ -56,7 +49,13 @@ class LinkedList(object):
             node = Node(value, self.head)
             self.head = node
 
-    @push
+    @add
     def push(self, value):
-        new_node = Node(value, self.head)
-        self.head = new_node
+        if self.head is None:
+            self.head = Node(value)
+        else:
+            node = self.head
+            while node.next is not None:
+                node = node.next
+            node.next = Node(value)
+

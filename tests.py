@@ -10,8 +10,8 @@ class TestLinkedList(unittest.TestCase):
         l = LinkedList()
         l.push(65255)
         l.push(65254)
-        self.assertEqual(l.head.value, 65254)
-        self.assertEqual(l.head.next.value, 65255)
+        self.assertEqual(l.head.value, 65255)
+        self.assertEqual(l.head.next.value, 65254)
 
 
 class TestCardMask(unittest.TestCase):
